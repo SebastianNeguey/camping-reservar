@@ -23,6 +23,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
       <nav className="mt-4">
         <ul>
           <li className="p-4 hover:bg-gray-700 cursor-pointer" onClick={() => router.push('/admin')}>Dashboard</li>
+          <li className="p-4 hover:bg-gray-700 cursor-pointer" onClick={() => router.push('/admin/reservar')}>Reservar</li>
           <li className="p-4 hover:bg-gray-700 cursor-pointer" onClick={() => router.push('/admin/reservas')}>Reservas</li>
           <li className="p-4 hover:bg-gray-700 cursor-pointer" onClick={() => router.push('/admin/usuarios')}>Usuarios</li>
           <li className="p-4 hover:bg-gray-700 cursor-pointer" onClick={() => router.push('/admin/puestos')}>Gestionar puestos</li>
