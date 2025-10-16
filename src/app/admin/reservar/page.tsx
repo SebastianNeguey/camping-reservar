@@ -1,12 +1,12 @@
 "use client";
 import React, { useState } from 'react';
-import UserLayout from '../componentes/UserLayout';
+import AdminLayout from '../componentes/AdminLayout';
 import ClientesModal from '../../../components/ClientesModal';
 import { getClienteByRut } from '../../../hooks/clientes';
 import { Cliente } from '../../../types/clientes';
 import { validateRut } from '../../../lib/validators';
 
-const ReservarUsuario: React.FC = () => {
+const ReservarAdmin: React.FC = () => {
   const [form, setForm] = useState<Cliente>({ nombre: '', rut: '', telefono: '', correo: '' });
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
@@ -35,8 +35,8 @@ const ReservarUsuario: React.FC = () => {
   };
 
   return (
-    <UserLayout>
-      <h1 className="text-2xl font-bold mb-4 text-black">Reservar (Usuario)</h1>
+    <AdminLayout>
+      <h1 className="text-2xl font-bold mb-4 text-black">Reservar (Admin)</h1>
       <div className="flex gap-2 mb-4">
         <button onClick={() => setIsModalOpen(true)} className="bg-indigo-600 text-white px-4 py-2 rounded">Gestionar clientes</button>
       </div>
@@ -80,8 +80,8 @@ const ReservarUsuario: React.FC = () => {
       </div>
 
       <ClientesModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSelect={handleSelectFromModal} />
-    </UserLayout>
+    </AdminLayout>
   );
 };
 
-export default ReservarUsuario;
+export default ReservarAdmin;

@@ -1,22 +1,48 @@
 "use client";
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { loginWithSupabase } from './supabaseLogin';
+import { getSession, getUserProfile } from '../../lib/supabase/supabaseSession';
+import { setCookie, getCookie, deleteCookie } from '../../lib/supabase/cookieSession';
 
 const LoginPage: React.FC = () => {
   const router = useRouter();
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Simulación de login básico
-    if (username === 'admin' && password === 'admin') {
+    setError('');
+    setLoading(true);
+    const { data, error } = await loginWithSupabase(email, password);
+    if (error || !data.session) {
+      setError('Usuario o contraseña incorrectos');
+      setLoading(false);
+      return;
+    }
+    // Guardar el token de sesión en una cookie
+    setCookie('supabase_token', data.session.access_token);
+    // Obtener sesión y perfil usando helpers
+    const { session } = await getSession();
+    if (!session) {
+      setError('No se pudo obtener la sesión');
+      setLoading(false);
+      return;
+    }
+    const profile = await getUserProfile();
+    setLoading(false);
+    if (!profile) {
+      setError('No se pudo obtener el perfil');
+      return;
+    }
+    if (profile.role === 'admin') {
       router.push('/admin');
-    } else if (username === 'user' && password === 'user') {
+    } else if (profile.role === 'user') {
       router.push('/usuario');
     } else {
-      setError('Usuario o contraseña incorrectos');
+      setError('Rol no reconocido');
     }
   };
 
@@ -25,10 +51,10 @@ const LoginPage: React.FC = () => {
       <form onSubmit={handleSubmit} className="bg-white p-8 rounded shadow w-full max-w-sm">
         <h2 className="text-2xl font-bold mb-6 text-center text-black">Iniciar Sesión</h2>
         <input
-          type="text"
-          placeholder="Usuario"
-          value={username}
-          onChange={e => setUsername(e.target.value)}
+          type="email"
+          placeholder="Correo"
+          value={email}
+          onChange={e => setEmail(e.target.value)}
           className="w-full p-2 mb-4 border rounded text-black"
           required
         />
@@ -41,7 +67,9 @@ const LoginPage: React.FC = () => {
           required
         />
         {error && <p className="text-red-500 mb-4 text-center">{error}</p>}
-        <button type="submit" className="w-full bg-gray-800 text-white py-2 rounded hover:bg-gray-700">Entrar</button>
+        <button type="submit" className="w-full bg-gray-800 text-white py-2 rounded hover:bg-gray-700" disabled={loading}>
+          {loading ? 'Ingresando...' : 'Entrar'}
+        </button>
       </form>
     </div>
   );
