@@ -8,7 +8,7 @@ import { validateRut } from '../../../lib/validators';
 import { supabase } from '../../../lib/supabase/supabaseClient';
 import { Puesto } from '../../../types/puestos';
 
-const TIPOS = ['con_meson', 'sin_meson', 'con_panchos'];
+const TIPOS = ['con_meson', 'sin_meson', 'con_panchos', 'acampar'];
 
 const ReservarAdmin: React.FC = () => {
   const [form, setForm] = useState<Cliente>({ nombre: '', rut: '', telefono: '', correo: '' });
@@ -118,7 +118,6 @@ const ReservarAdmin: React.FC = () => {
               </div>
 
               <div className="flex items-center gap-2">
-                <button type="button" className="bg-blue-600 text-white px-4 py-2 rounded">Confirmar reserva</button>
                 <button type="button" onClick={() => { setIsModalOpen(true); }} className="bg-green-600 text-white px-4 py-2 rounded">Agregar clientes</button>
                 <button type="button" onClick={() => { setIsModalOpen(true); }} className="bg-yellow-500 text-white px-4 py-2 rounded">Editar cliente</button>
                 <button type="button" onClick={() => { setForm({ nombre: '', rut: '', telefono: '', correo: '' }); clearMessages(); }} className="bg-gray-400 text-white px-4 py-2 rounded">Limpiar</button>
